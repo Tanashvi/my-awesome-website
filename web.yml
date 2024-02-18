@@ -1,0 +1,41 @@
+// Playbook nginx
+---
+- name: Install nginx
+  hosts: rashmi
+  gather_facts: yes
+  tasks:
+    - name: nginx package installation
+      apt:
+        name: nginx
+        state: latest
+        
+    - name: Enable nginx service
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+        
+    - name: Install firewalld package
+      apt:
+        name: firewalld
+        state: latest
+        
+    - name: start and enable firewalld
+      systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+        
+        
+    - name: Add service
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: yes
+        
+    - name: Create simple web page
+      copy: 
+        content: "Hello All, How are you\n"
+        dest: /var/www/html/index.html
+        
